@@ -27,8 +27,8 @@ body, html {
 }
 
 .wrapper {
-  min-height: 100vh;
-  // overflow-y: scroll;
+  height: 100vh;
+  overflow-y: scroll;
   background-color: $mainBG;
   color: $textColor;
   padding: 10px 0;
