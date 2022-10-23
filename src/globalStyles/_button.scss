@@ -1,0 +1,31 @@
+@import './colors';
+@import './variables';
+
+.button {
+  background-color: $secondaryBG;
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: $borderRadius;
+  cursor: pointer;
+
+  &_disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  &_accept {
+    background-color: $confirmColor;
+  }
+
+  &_decline {
+    background-color: $declineColor;
+  }
+  
+  &_ml10 {
+    margin-left: 10px;
+  }
+
+  &+& {
+    margin-left: 10px;
+  }
+}
