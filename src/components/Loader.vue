@@ -28,16 +28,22 @@ const { isLoading } = storeToRefs(baseStore);
 
 <style lang="scss">
   .preloader {
-  place-items: center;
-  display: none;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  translate: (-50%, -50%);
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
   &__spinner {
-    display: inline-block;
+    display: block;
+    position: relative;
+    left: 50%;
+    top: 50%;
     width: 80px;
     height: 80px;
+    margin: -80px 0 0 -40px;
+    border-radius: 50%;
 
     &::after {
       content: " ";
@@ -53,12 +59,7 @@ const { isLoading } = storeToRefs(baseStore);
   }
 
   &.showLoader{
-    display: grid;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
+    display: block;
     background-color: $mainBGTransparent;
     z-index: 11;
   }

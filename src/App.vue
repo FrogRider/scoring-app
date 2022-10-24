@@ -1,9 +1,7 @@
 <template>
   <div class="wrapper">
-    <div class="container">
-      <Loader />
-      <router-view/>
-    </div>
+    <Loader />
+    <router-view/>
   </div>
 </template>
 
@@ -27,15 +25,10 @@ body, html {
 }
 
 .wrapper {
-  height: 100vh;
-  overflow-y: scroll;
+  position: relative;
+  min-height: 100vh;
   background-color: $mainBG;
   color: $textColor;
-  padding: 10px 0;
-}
-
-.container {
-  width: 80%;
-  margin: auto;
+  padding: 10px 10%;
 }
 </style>

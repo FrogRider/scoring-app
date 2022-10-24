@@ -12,18 +12,18 @@
     <div class="user__adminButtons">
       <div class="user__togglePointsDirection">
         <div
-          class="user__togglePointsDirectionItem"
-          @click="plusMinus(true)"
+          class="user__togglePointsDirectionItem user__togglePointsDirectionItem_plus"
           :class="{active: plusPointsActive}"
+          @click="plusMinus(true)"
         >
-          <span class="inner"></span>
+          <Icon icon="akar-icons:plus" />
         </div>
         <div
-          class="user__togglePointsDirectionItem"
-          @click="plusMinus(false)"
+          class="user__togglePointsDirectionItem user__togglePointsDirectionItem_minus"
           :class="{active: !plusPointsActive}"
+          @click="plusMinus(false)"
         >
-          <span class="inner"></span>
+          <Icon icon="akar-icons:minus" />
         </div>
       </div>
       <div class="user__addPoints">
@@ -33,18 +33,18 @@
       <div class="user__buttons">
         <div class="user__buttonsAdd">
           <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(1, user)">
-            <span class="forDesctop">Добавить</span>
-            <span class="forMobile">+</span>
+            <span class="forDesctop">{{ longBuutonTitle }}</span>
+            <span class="forMobile">{{ shortButtonTitle }}</span>
             1
           </div>
           <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(5, user)">
-            <span class="forDesctop">Добавить</span>
-            <span class="forMobile">+</span>
+            <span class="forDesctop">{{ longBuutonTitle }}</span>
+            <span class="forMobile">{{ shortButtonTitle }}</span>
             5
           </div>
           <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(10, user)">
-            <span class="forDesctop">Добавить</span>
-            <span class="forMobile">+</span>
+            <span class="forDesctop">{{ longBuutonTitle }}</span>
+            <span class="forMobile">{{ shortButtonTitle }}</span>
             10
           </div>
         </div>
@@ -63,6 +63,7 @@ import useUsersStore from '@/store/usersStore';
 import { defineProps, toRefs, ref, computed } from 'vue';
 import firebase from 'firebase';
 import useBaseStore from '@/store/baseStore';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   user: {
@@ -88,6 +89,12 @@ const pointsToChange = ref(null);
 
 const buttonTitle = computed(() => {
   return changePoints.value ? 'Добавить' : 'Отнять';
+});
+const longBuutonTitle = computed(() => {
+  return changePoints.value ? 'Добавить' : 'Отнять';
+});
+const shortButtonTitle = computed(() => {
+  return changePoints.value ? '+' : '-';
 });
 
 const hasCrown = computed(() => {
@@ -121,7 +128,7 @@ const criticalLimit = (points) => {
 const addPoints = async (points, user) => {
   if(!isAdmin.value) return;
   baseStore.showLoader();
-  users.value[userIndex.value].points += points;
+  changePoints.value ? users.value[userIndex.value].points += points : users.value[userIndex.value].points -= points;
   await firebase.database().ref('users').child(user.key).update({points: users.value[userIndex.value].points});
   baseStore.hideLoader();
 };
@@ -148,10 +155,6 @@ const removeUser = async (key) => {
   }
   p { 
     margin: 0 0 10px;
-  }
-
-  div.active {
-    color: red;
   }
 
 .user {
@@ -204,43 +207,16 @@ const removeUser = async (key) => {
     border-radius: $borderRadius;
     cursor: pointer;
 
-    & .inner {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      // background-color: red;
-
-      &::before, &::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 50%;
-        height: 3px;
-        background-color: $textColor;
-        translate: (-50% -50%);
-      }
+    svg {
+      transition: color .2s;
     }
 
-    &:nth-child(1) .inner {
-      &::after {
-        rotate: 90deg;
-      }
+    &_plus.active svg {
+      color: $confirmColor;
     }
 
-    &.active:nth-child(1) .inner {
-      &::after {
-        rotate: 90deg;
-      }
-      &::after, &::before {
-        background-color: $confirmColor;
-      }
-    }
-
-    &.active:nth-child(2) .inner {
-      &::after, &::before {
-        background-color: $declineColor;
-      }
+    &_minus.active svg {
+      color: $declineColor;
     }
 
     & + & {
