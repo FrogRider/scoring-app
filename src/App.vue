@@ -24,6 +24,10 @@ body, html {
   background-color: $mainBG;
 }
 
+body.disabledScroll {
+  overflow: hidden;
+}
+
 .wrapper {
   position: relative;
   min-height: 100vh;

@@ -13,17 +13,17 @@ const baseStore = useBaseStore();
 
 const { isLoading } = storeToRefs(baseStore);
 
-// const handleLoaderStatusUpdate = () => {
-//   if (isLoading.value) {
-//     window.scroll(0, 0);
-//     // document.body.classList.add('disabledScroll');
-//   } 
-//   // else document.body.classList.remove('disabledScroll');
-// };
+const handleLoaderStatusUpdate = () => {
+  if (isLoading.value) {
+    // window.scroll(0, 0);
+    document.body.classList.add('disabledScroll');
+  } 
+  else document.body.classList.remove('disabledScroll');
+};
 
-// watch(isLoading, () => {
-//   handleLoaderStatusUpdate();
-// });
+watch(isLoading, () => {
+  handleLoaderStatusUpdate();
+});
 </script>
 
 <style lang="scss">

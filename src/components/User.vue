@@ -27,30 +27,50 @@
         </div>
       </div>
       <div class="user__addPoints">
-        <input placeholder="Введите баллы" class="input" type="number" v-model="pointsToChange">
-        <div class="button button_accept button_ml10" :class="{button_disabled: !isAdmin}" @click="acceptChangePoints()">{{ buttonTitle }}</div>
+        <input
+          placeholder="Введите баллы"
+          class="input"
+          type="number"
+          v-model="pointsToChange"
+          v-on:keyup.enter="acceptChangePoints()"
+        >
+        <div
+          class="button button_accept button_ml10"
+          :class="{button_disabled: !isAdmin}"
+          @click="acceptChangePoints()"
+        >
+          {{ buttonTitle }}
+        </div>
       </div>
       <div class="user__buttons">
         <div class="user__buttonsAdd">
-          <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(1, user)">
+          <div
+            v-for="button in buttons"
+            :key="button"
+            class="button"
+            :class="{button_disabled: !isAdmin}"
+            @click="addPoints(button, user)"
+          >
             <span class="forDesctop">{{ longBuutonTitle }}</span>
             <span class="forMobile">{{ shortButtonTitle }}</span>
-            1
-          </div>
-          <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(5, user)">
-            <span class="forDesctop">{{ longBuutonTitle }}</span>
-            <span class="forMobile">{{ shortButtonTitle }}</span>
-            5
-          </div>
-          <div class="button" :class="{button_disabled: !isAdmin}" @click="addPoints(10, user)">
-            <span class="forDesctop">{{ longBuutonTitle }}</span>
-            <span class="forMobile">{{ shortButtonTitle }}</span>
-            10
+            {{ button }}
           </div>
         </div>
         <div class="user__buttonsDelete">
-          <div class="button button_decline" :class="{button_disabled: !isAdmin}" @click="clearUser(user.key)">Очистить</div>
-          <div class="button button_decline" :class="{button_disabled: !isAdmin}" @click="removeUser(user.key, index)">Удалить</div>
+          <div
+            class="button button_decline"
+            :class="{button_disabled: !isAdmin}"
+            @click="clearUser(user.key)"
+          >
+            Очистить
+          </div>
+          <div
+            class="button button_decline"
+            :class="{button_disabled: !isAdmin}"
+            @click="removeUser(user.key, index)"
+          >
+            Удалить
+          </div>
         </div>
       </div>
     </div>
@@ -84,41 +104,46 @@ const usersStore = useUsersStore();
 
 const { users } = storeToRefs(usersStore);
 
-const changePoints = ref(true);
+const buttons = [1, 5, 10];
+
+const increasePoints = ref(true);
 const pointsToChange = ref(null);
 
 const buttonTitle = computed(() => {
-  return changePoints.value ? 'Добавить' : 'Отнять';
+  return increasePoints.value ? 'Добавить' : 'Отнять';
 });
 const longBuutonTitle = computed(() => {
-  return changePoints.value ? 'Добавить' : 'Отнять';
+  return increasePoints.value ? 'Добавить' : 'Отнять';
 });
 const shortButtonTitle = computed(() => {
-  return changePoints.value ? '+' : '-';
+  return increasePoints.value ? '+' : '-';
 });
 
 const hasCrown = computed(() => {
   return userIndex.value === 0 && user.value.points > 0;
 })
 
+const changePoints = (value) => {
+  return increasePoints.value
+    ? user.value.points += value
+    : user.value.points -= value;
+}
+
 const acceptChangePoints = async () => {
   if(!isAdmin.value || !pointsToChange.value) return;
-  const index = userIndex.value;
-  users.value[index].points = changePoints.value ?
-    users.value[index].points += pointsToChange.value :
-    users.value[index].points -= pointsToChange.value;
+  changePoints(pointsToChange.value);
   baseStore.showLoader();
-  await firebase.database().ref('users').child(users.value[index].key).update({points: users.value[index].points});
+  await firebase.database().ref('users').child(user.value.key).update({points: user.value.points});
   pointsToChange.value = null;
   baseStore.hideLoader();
 };
 
 const plusPointsActive = computed(() => {
-  return changePoints.value === true;
+  return increasePoints.value === true;
 });
 
 const plusMinus = (value) => {
-  changePoints.value = value;
+  increasePoints.value = value;
 }
 
 const criticalLimit = (points) => {
@@ -128,18 +153,19 @@ const criticalLimit = (points) => {
 const addPoints = async (points, user) => {
   if(!isAdmin.value) return;
   baseStore.showLoader();
-  changePoints.value ? users.value[userIndex.value].points += points : users.value[userIndex.value].points -= points;
-  await firebase.database().ref('users').child(user.key).update({points: users.value[userIndex.value].points});
+  changePoints(points);
+  await firebase.database().ref('users').child(user.key).update({points: user.points});
   baseStore.hideLoader();
 };
 
 const clearUser = async (key) => {
   if(!isAdmin.value) return;
   baseStore.showLoader();
-  users.value[userIndex.value].points = 0;
+  user.value.points = 0;
   await firebase.database().ref('users').child(key).update({points: 0});
   baseStore.hideLoader();
 };
+
 const removeUser = async (key) => {
   if(!isAdmin.value) return;
   baseStore.showLoader();
