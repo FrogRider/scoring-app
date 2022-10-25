@@ -1,4 +1,4 @@
-# scoring-app
+# scoring-app, powered by Firebase
 
 ## Project setup
 ```
@@ -14,6 +14,9 @@ npm run serve
 ```
 npm run build
 ```
+
+### Open app
+[Link](https://frogrider.github.io/scoring-app/#/)
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
