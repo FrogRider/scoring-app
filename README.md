@@ -15,6 +15,11 @@ npm run serve
 npm run build
 ```
 
+### Used libraries:
+- [Pinia](https://docs.iconify.design/)
+- [Iconify](https://docs.iconify.design/)
+- [Auto-animate](https://auto-animate.formkit.com/)
+
 ### Open app
 [Link](https://frogrider.github.io/scoring-app/#/)
 
