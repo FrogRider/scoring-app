@@ -15,10 +15,11 @@ npm run serve
 npm run build
 ```
 
-### Used libraries:
+### Used libraries and packages:
 - [Pinia](https://docs.iconify.design/)
 - [Iconify](https://docs.iconify.design/)
 - [Auto-animate](https://auto-animate.formkit.com/)
+- [vue3-notification](https://www.npmjs.com/package/@kyvg/vue3-notification)
 
 ### Open app
 [Link](https://frogrider.github.io/scoring-app/#/)
