@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <notifications position="top right"/>
     <Loader />
     <router-view/>
   </div>

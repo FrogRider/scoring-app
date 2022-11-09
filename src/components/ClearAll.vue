@@ -9,6 +9,7 @@ import { storeToRefs } from 'pinia';
 import useUsersStore from '@/store/usersStore';
 import firebase from 'firebase';
 import useBaseStore from '@/store/baseStore';
+import {showNotificationMessage, preventEditingForNotAdmins} from '@/utils/notifications';
 
 const baseStore = useBaseStore();
 
@@ -20,7 +21,7 @@ const { users } = storeToRefs(usersStore);
 
 
 const clearAll = async () => {
-  if(!isAdmin.value) return;
+  if (preventEditingForNotAdmins(isAdmin.value)) return;
   baseStore.showLoader();
   users.value.map(user => {
     user.points = 0;

@@ -4,6 +4,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import firebase from 'firebase/app';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
+import Notifications from '@kyvg/vue3-notification';
 
 createApp({
   created() {
@@ -23,6 +24,7 @@ createApp({
   render: () => h(App),
 })
 .use(router)
+.use(Notifications)
 .use(createPinia())
 .use(autoAnimatePlugin)
 .mount('#app')

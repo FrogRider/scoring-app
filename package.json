@@ -10,6 +10,7 @@
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.3",
     "@iconify/vue": "^4.0.0",
+    "@kyvg/vue3-notification": "^2.6.0",
     "core-js": "^3.6.5",
     "firebase": "^8.10.1",
     "pinia": "^2.0.23",

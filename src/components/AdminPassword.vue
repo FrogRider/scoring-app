@@ -16,6 +16,7 @@
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import useBaseStore from '@/store/baseStore';
+import { showNotificationMessage } from '@/utils/notifications';
 
 const baseStore = useBaseStore();
 
@@ -30,6 +31,8 @@ const validatePassword = () => {
     localStorage.setItem('SCORING_APP_ADMIN', true);
     showPasswordComponent.value = false;
     isAdmin.value = true;
+  } else {
+    showNotificationMessage('Пароль не верный', 'error')
   }
 }
 </script>

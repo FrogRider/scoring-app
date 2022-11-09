@@ -39,7 +39,7 @@
           :class="{button_disabled: !isAdmin}"
           @click="acceptChangePoints()"
         >
-          {{ buttonTitle }}
+          {{ longButtonTitle }}
         </div>
       </div>
       <div class="user__buttons">
@@ -51,7 +51,7 @@
             :class="{button_disabled: !isAdmin}"
             @click="addPoints(button, user)"
           >
-            <span class="forDesctop">{{ longBuutonTitle }}</span>
+            <span class="forDesctop">{{ longButtonTitle }}</span>
             <span class="forMobile">{{ shortButtonTitle }}</span>
             {{ button }}
           </div>
@@ -84,6 +84,12 @@ import { defineProps, toRefs, ref, computed } from 'vue';
 import firebase from 'firebase';
 import useBaseStore from '@/store/baseStore';
 import { Icon } from '@iconify/vue';
+import {showNotificationMessage, preventEditingForNotAdmins} from '@/utils/notifications';
+import { notify } from '@kyvg/vue3-notification';;
+
+// const showNotificationMessage = (text="", type="success") => {
+//   notify({ type, text });
+// }
 
 const props = defineProps({
   user: {
@@ -109,10 +115,7 @@ const buttons = [1, 5, 10];
 const increasePoints = ref(true);
 const pointsToChange = ref(null);
 
-const buttonTitle = computed(() => {
-  return increasePoints.value ? 'Добавить' : 'Отнять';
-});
-const longBuutonTitle = computed(() => {
+const longButtonTitle = computed(() => {
   return increasePoints.value ? 'Добавить' : 'Отнять';
 });
 const shortButtonTitle = computed(() => {
@@ -129,8 +132,19 @@ const changePoints = (value) => {
     : user.value.points -= value;
 }
 
+// const preventEditingForNotAdmins = () => {
+//   if(!isAdmin.value) {
+//     showNotificationMessage('Нет прав для изменения данных', 'error');
+//     return true;
+//   }
+// }
+
 const acceptChangePoints = async () => {
-  if(!isAdmin.value || !pointsToChange.value) return;
+  if (preventEditingForNotAdmins(isAdmin.value)) return;
+  if(!pointsToChange.value) {
+    showNotificationMessage('Введите количество баллов', 'warn')
+    return;
+  }
   changePoints(pointsToChange.value);
   baseStore.showLoader();
   await firebase.database().ref('users').child(user.value.key).update({points: user.value.points});
@@ -151,7 +165,7 @@ const criticalLimit = (points) => {
 };
 
 const addPoints = async (points, user) => {
-  if(!isAdmin.value) return;
+  if (preventEditingForNotAdmins(isAdmin.value)) return;
   baseStore.showLoader();
   changePoints(points);
   await firebase.database().ref('users').child(user.key).update({points: user.points});
@@ -159,7 +173,7 @@ const addPoints = async (points, user) => {
 };
 
 const clearUser = async (key) => {
-  if(!isAdmin.value) return;
+  if (preventEditingForNotAdmins(isAdmin.value)) return;
   baseStore.showLoader();
   user.value.points = 0;
   await firebase.database().ref('users').child(key).update({points: 0});
@@ -167,7 +181,7 @@ const clearUser = async (key) => {
 };
 
 const removeUser = async (key) => {
-  if(!isAdmin.value) return;
+  if (preventEditingForNotAdmins(isAdmin.value)) return;
   baseStore.showLoader();
   await firebase.database().ref('users').child(key).remove();
   usersStore.removeUser(key);
