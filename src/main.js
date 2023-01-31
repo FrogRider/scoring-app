@@ -8,17 +8,10 @@ import Notifications from '@kyvg/vue3-notification';
 
 createApp({
   created() {
-    const config = {
-      apiKey: "AIzaSyDcljchEoPvQY17GatYUSo0QxkTX-vJ_a8",
-      authDomain: "scoring-app-5bee6.firebaseapp.com",
-      projectId: "scoring-app-5bee6",
-      storageBucket: "scoring-app-5bee6.appspot.com",
-      messagingSenderId: "1023325722401",
-      appId: "1:1023325722401:web:bcaf01c6df06096eec1060",
-      measurementId: "G-VN1G2LX4TM",
-      databaseURL: "https://scoring-app-5bee6-default-rtdb.europe-west1.firebasedatabase.app/",
-    };
+    const config = JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG)
     firebase.initializeApp(config);
+    const appCheck = firebase.appCheck();
+    appCheck.activate('6Lc7LUAkAAAAAPzYcVfLq30yoO7tHD9ARmSyUkto', true);
     
   },
   render: () => h(App),
