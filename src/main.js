@@ -10,9 +10,6 @@ createApp({
   created() {
     const config = JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG)
     firebase.initializeApp(config);
-    const appCheck = firebase.appCheck();
-    appCheck.activate('6Lc7LUAkAAAAAPzYcVfLq30yoO7tHD9ARmSyUkto', true);
-    
   },
   render: () => h(App),
 })
